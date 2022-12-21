@@ -10,6 +10,7 @@ async def on_ready():
     try:
         synced = await bot.tree.sync()
         print(f'Synced {len(synced)} commands')
+        print(len(bot.guilds))
     except Exception as e:
         print(e)
     await bot.change_presence(activity=discord.Game(f'custom status'))
@@ -18,6 +19,8 @@ async def on_ready():
 @bot.tree.command(name='all-servers', description='send your message to everyone in all servers')
 async def div_all(interaction: discord.Interaction, msg: str):
     sent = [interaction.user.id]
+
+    await interaction.response.send_message(f"Sending your message to {len(bot.guilds)} servers...", ephemeral=True)
 
     guilds = bot.guilds
     for g in guilds:
@@ -36,7 +39,7 @@ async def div_all(interaction: discord.Interaction, msg: str):
 async def specific(interaction: discord.Interaction, msg: str, id_guild: str):
     try:
         guild = bot.get_guild(int(id_guild))
-        await interaction.response.send_message(guild.name)
+        await interaction.response.send_message(f"Sending your message to {guild.name}...", ephemeral=True)
 
         sent = [interaction.user.id]
         for m in guild.members:
@@ -50,7 +53,7 @@ async def specific(interaction: discord.Interaction, msg: str, id_guild: str):
             except:
                 print(f"[-] Message couldn't be sent to {m._user}")
     except:
-        await interaction.response.send_message("That server couldn't be found!")
+        await interaction.response.send_message("That server couldn't be found!" , ephemeral=True)
 
 
 @bot.tree.command(name='dm', description="send your message to somemone's dm")
