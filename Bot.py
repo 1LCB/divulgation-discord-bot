@@ -10,7 +10,6 @@ async def on_ready():
     try:
         synced = await bot.tree.sync()
         print(f'Synced {len(synced)} commands')
-        print(len(bot.guilds))
     except Exception as e:
         print(e)
     await bot.change_presence(activity=discord.Game(f'custom status'))
