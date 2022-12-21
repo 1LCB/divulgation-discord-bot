@@ -3,6 +3,7 @@ from discord.ext import commands
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
+
 @bot.event
 async def on_ready():
     print(f'{bot.user} is ready!')
@@ -12,6 +13,7 @@ async def on_ready():
     except Exception as e:
         print(e)
     await bot.change_presence(activity=discord.Game(f'custom status'))
+
 
 @bot.tree.command(name='all-servers', description='send your message to everyone in all servers')
 async def div_all(interaction: discord.Interaction, msg: str):
@@ -48,7 +50,29 @@ async def specific(interaction: discord.Interaction, msg: str, id_guild: str):
             except:
                 print(f"[-] Message couldn't be sent to {m._user}")
     except:
-        await interaction.response.send_message("This server couldn't be found!")
+        await interaction.response.send_message("That server couldn't be found!")
+
+
+@bot.tree.command(name='dm', description="send your message to somemone's dm")
+async def dm(interaction: discord.Interaction, msg: str, user_id: str):
+    try:
+        user = bot.get_user(int(user_id))
+
+        await user.send(msg)
+        await interaction.response.send_message(f"✅ Your message was sent to {user.name} ✅", ephemeral=True)
+    except:
+        await interaction.response.send_message(f"❌ Your message couldn't be sent to that user ❌", ephemeral=True)
+
+
+@bot.tree.command(name='channel', description="send your message to a specific server's channel")
+async def channel(interaction: discord.Interaction, msg: str, channel_id: str):
+    try:
+        channel_ = bot.get_channel(int(channel_id))
+
+        await channel_.send(msg)
+        await interaction.response.send_message(f"✅ Your message was sent to {channel_.name} ✅", ephemeral=True)
+    except:
+        await interaction.response.send_message(f"❌ Your message couldn't be sent to that channel ❌", ephemeral=True)
 
 
 bot.run("your bot's token here")
